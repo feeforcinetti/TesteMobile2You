@@ -11,13 +11,18 @@ class MovieHeaderView: UITableViewHeaderFooterView {
     
     static let identifier: String = "MovieHeader"
     
+    var isActive: Bool = false
+    
     private lazy var titleMovies: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .black
         label.text = "The Very Best Of Jhonny Depp"
-        label.font = UIFont.systemFont(ofSize: 25, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 30, weight: .bold)
         label.textColor = .white
+        label.lineBreakMode = .byTruncatingTail
+        label.numberOfLines = 0
+
         return label
     }()
     
@@ -42,7 +47,17 @@ class MovieHeaderView: UITableViewHeaderFooterView {
 
         return label
     }()
-
+    
+    private lazy var button: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "heart"), for: .normal)
+        button.imageView?.tintColor = .white
+        button.imageView?.contentMode = .scaleAspectFit
+        button.addTarget(self, action: #selector(self.tappedButton), for: .touchUpInside)
+        return button
+    }()
+    
 
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
@@ -53,6 +68,15 @@ class MovieHeaderView: UITableViewHeaderFooterView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    @objc private func tappedButton() {
+        if isActive {
+            isActive = false
+            self.button.setImage(UIImage(named: "heart"), for: .normal)
+        }else {
+            isActive = true
+            self.button.setImage(UIImage(named: "heart-white"), for: .normal)
+        }
+    }
 }
 
 extension MovieHeaderView: ConfigViewProtocol {
@@ -60,21 +84,26 @@ extension MovieHeaderView: ConfigViewProtocol {
         addSubview(self.titleMovies)
         addSubview(self.likes)
         addSubview(self.watched)
+        addSubview(self.button)
     }
     
     func configureConstraints() {
         NSLayoutConstraint.activate([
-            titleMovies.topAnchor.constraint(equalTo: self.topAnchor, constant: 4),
+            titleMovies.topAnchor.constraint(equalTo: self.topAnchor),
             titleMovies.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 6),
-            titleMovies.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -4),
+            titleMovies.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -20),
             
-            likes.topAnchor.constraint(equalTo: self.titleMovies.bottomAnchor, constant: 8),
+            likes.topAnchor.constraint(equalTo: self.titleMovies.bottomAnchor, constant: 4),
             likes.leadingAnchor.constraint(equalTo: self.titleMovies.leadingAnchor),
-            likes.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4),
-            
+           
             watched.centerYAnchor.constraint(equalTo: self.likes.centerYAnchor),
             watched.leadingAnchor.constraint(equalTo: self.likes.trailingAnchor, constant: 15),
-            watched.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4)
+            
+            button.topAnchor.constraint(equalTo: self.titleMovies.topAnchor),
+            button.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 25),
+            button.heightAnchor.constraint(equalToConstant: 50),
+            button.widthAnchor.constraint(equalTo: self.heightAnchor)
+           
         ])
     }
     

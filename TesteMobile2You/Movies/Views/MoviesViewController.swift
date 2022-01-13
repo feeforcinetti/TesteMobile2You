@@ -34,12 +34,23 @@ extension MoviesViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = UITableViewCell(style: UITableViewCell.CellStyle.subtitle, reuseIdentifier: "Cell")
+        let cell = tableView.dequeueReusableCell(withIdentifier: MoviesTableViewCell.identifier, for: indexPath) as? MoviesTableViewCell
         
-        cell.imageView?.image = moviesList[indexPath.row].image
-        cell.textLabel?.text = moviesList[indexPath.row].title
-        cell.detailTextLabel?.text = moviesList[indexPath.row].subtitle
-        return cell
+        cell?.backgroundColor = .black
+        cell?.setupCell(data: moviesList[indexPath.row])
+//        cell.backgroundColor = .black
+//        cell.textLabel?.textColor = . white
+//        cell.detailTextLabel?.textColor = .white
+//        cell.imageView?.image = moviesList[indexPath.row].image
+//        cell.textLabel?.text = moviesList[indexPath.row].title
+//        cell.detailTextLabel?.text = moviesList[indexPath.row].subtitle
+        
+
+        return cell ?? UITableViewCell()
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return CGFloat(100)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -48,7 +59,7 @@ extension MoviesViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 75
+        return 100
     }
     
     

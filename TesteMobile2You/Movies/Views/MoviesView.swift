@@ -24,6 +24,7 @@ class MoviesView: UIView {
         tableView.backgroundColor = .black
         tableView.isScrollEnabled = false
         tableView.separatorStyle = .singleLine
+        tableView.register(MoviesTableViewCell.self, forCellReuseIdentifier: MoviesTableViewCell.identifier)
         tableView.register(MovieHeaderView.self, forHeaderFooterViewReuseIdentifier: "MovieHeader")
         return tableView
     }()
