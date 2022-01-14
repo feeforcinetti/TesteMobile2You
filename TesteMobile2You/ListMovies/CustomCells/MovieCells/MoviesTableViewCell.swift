@@ -22,10 +22,10 @@ class MoviesTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func setupCell(data: Movies) {
-        moviesTableViewCellScreen.imageMovie.image = data.image
-        moviesTableViewCellScreen.titleLabel.text = data.title
-        moviesTableViewCellScreen.descriptionLabel.text = data.subtitle
+    public func setupCell(data: ListMovies) {
+//        moviesTableViewCellScreen.imageMovie.image = data.image
+//        moviesTableViewCellScreen.titleLabel.text = data.title
+//        moviesTableViewCellScreen.descriptionLabel.text = data.subtitle
     }
 }
 

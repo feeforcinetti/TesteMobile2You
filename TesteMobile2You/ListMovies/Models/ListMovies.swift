@@ -8,8 +8,8 @@
 import Foundation
 import UIKit
 
-struct Movies {
-    let image: UIImage?
+struct ListMovies: Codable {
+    let image: String?
     let title: String?
-    let subtitle: String?
+    let genre: String?
 }

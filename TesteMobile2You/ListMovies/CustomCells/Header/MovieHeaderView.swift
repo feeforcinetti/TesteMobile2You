@@ -11,9 +11,7 @@ class MovieHeaderView: UITableViewHeaderFooterView {
     
     static let identifier: String = "MovieHeader"
     
-    var isActive: Bool = false
-    
-    private lazy var titleMovies: UILabel = {
+     lazy var titleMovies: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .black
@@ -26,7 +24,7 @@ class MovieHeaderView: UITableViewHeaderFooterView {
         return label
     }()
     
-    private lazy var likes: UILabel = {
+     lazy var likes: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .black
@@ -37,7 +35,7 @@ class MovieHeaderView: UITableViewHeaderFooterView {
         return label
     }()
     
-    private lazy var watched: UILabel = {
+     lazy var watched: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .black
@@ -48,10 +46,10 @@ class MovieHeaderView: UITableViewHeaderFooterView {
         return label
     }()
     
-    private lazy var button: UIButton = {
+     lazy var button: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "heart"), for: .normal)
+        button.setImage(UIImage(named: "like"), for: .normal)
         button.imageView?.tintColor = .white
         button.imageView?.contentMode = .scaleAspectFit
         button.addTarget(self, action: #selector(self.tappedButton), for: .touchUpInside)
@@ -69,13 +67,8 @@ class MovieHeaderView: UITableViewHeaderFooterView {
     }
     
     @objc private func tappedButton() {
-        if isActive {
-            isActive = false
-            self.button.setImage(UIImage(named: "heart"), for: .normal)
-        }else {
-            isActive = true
-            self.button.setImage(UIImage(named: "heart-white"), for: .normal)
-        }
+        button.isSelected = !button.isSelected
+        self.button.setImage(UIImage(named: button.isSelected ? "like" : "heart"), for: .normal)
     }
 }
 
@@ -100,8 +93,8 @@ extension MovieHeaderView: ConfigViewProtocol {
             watched.leadingAnchor.constraint(equalTo: self.likes.trailingAnchor, constant: 15),
             
             button.topAnchor.constraint(equalTo: self.titleMovies.topAnchor),
-            button.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 25),
-            button.heightAnchor.constraint(equalToConstant: 50),
+            button.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 30),
+            button.heightAnchor.constraint(equalToConstant: 20),
             button.widthAnchor.constraint(equalTo: self.heightAnchor)
            
         ])

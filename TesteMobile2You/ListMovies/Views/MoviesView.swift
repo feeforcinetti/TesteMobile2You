@@ -9,10 +9,9 @@ import UIKit
 
 class MoviesView: UIView {
     
-    private lazy var ImageMovie: UIImageView = {
+     lazy var ImageMovie: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.backgroundColor = .blue
         image.image = UIImage(named: "JhonnyDepp")
         image.contentMode = .scaleAspectFill
         return image

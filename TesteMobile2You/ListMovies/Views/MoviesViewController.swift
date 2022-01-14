@@ -11,10 +11,10 @@ class MoviesViewController: UIViewController {
     
     var movies: MoviesView?
     
-    var moviesList: [Movies] = [Movies(image: UIImage(named: "JhonnyDepp"), title: "Piratas no caribe", subtitle: "Mais ou menos bão"),
-                                Movies(image: UIImage(named: "JhonnyDepp"), title: "Piratas no caribe", subtitle: "Mais ou menos bão")
-    ]
+    var moviesApi: MoviesApi = MoviesApi()
     
+    var listMovies: [ListMovies] = []
+
     override func loadView() {
         self.movies = MoviesView()
         self.view = movies
@@ -23,13 +23,21 @@ class MoviesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         movies?.configTableViewProtocols(delegate: self, datasource: self)
+        
+        moviesApi.fetchMovies { movie in
+            DispatchQueue.main.async {
+                self.movies?.ImageMovie.image = UIImage(named: String(movie?.posterPath ?? ""))
+            }
+            
+        }
+      
     }
 
 }
 
 extension MoviesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return moviesList.count
+        return listMovies.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -37,14 +45,7 @@ extension MoviesViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: MoviesTableViewCell.identifier, for: indexPath) as? MoviesTableViewCell
         
         cell?.backgroundColor = .black
-        cell?.setupCell(data: moviesList[indexPath.row])
-//        cell.backgroundColor = .black
-//        cell.textLabel?.textColor = . white
-//        cell.detailTextLabel?.textColor = .white
-//        cell.imageView?.image = moviesList[indexPath.row].image
-//        cell.textLabel?.text = moviesList[indexPath.row].title
-//        cell.detailTextLabel?.text = moviesList[indexPath.row].subtitle
-        
+        cell?.setupCell(data: listMovies[indexPath.row])
 
         return cell ?? UITableViewCell()
     }
@@ -55,6 +56,17 @@ extension MoviesViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "MovieHeader") as? MovieHeaderView
+        
+        self.moviesApi.fetchMovies { movie in
+            guard let movie = movie else {return}
+            DispatchQueue.main.async {
+                header?.titleMovies.text = movie.belongsToCollection.name
+                header?.likes.text = String(movie.voteCount ?? 0.0) + " likes"
+                header?.watched.text = String(movie.popularity ?? 0.0) + " views"
+                tableView.reloadData()
+            }
+        }
+        
         return header
     }
     
