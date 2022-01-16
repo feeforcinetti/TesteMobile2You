@@ -8,12 +8,10 @@
 import Foundation
 
 struct HeaderMovie: Codable {
+    let backdropPath: String?
     let posterPath: String?
-    let belongsToCollection: BelongsToCollection
+    let originalTitle: String?
     let popularity: Double?
     let voteCount: Double?
 }
 
-struct BelongsToCollection: Codable {
-    let name: String?
-}

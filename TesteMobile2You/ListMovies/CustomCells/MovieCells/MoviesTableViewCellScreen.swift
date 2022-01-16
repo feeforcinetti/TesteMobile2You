@@ -9,15 +9,15 @@ import UIKit
 
 class MoviesTableViewCellScreen: UIView {
     
-    internal lazy var imageMovie: UIImageView = {
+    lazy var imageMovie: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.image = UIImage(named: "")
-        image.contentMode = .scaleAspectFill
+        image.contentMode = .scaleAspectFit
         return image
     }()
     
-    internal lazy var titleLabel: UILabel = {
+    lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
@@ -26,7 +26,7 @@ class MoviesTableViewCellScreen: UIView {
         return label
     }()
     
-    internal lazy var descriptionLabel: UILabel = {
+    lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
@@ -35,13 +35,24 @@ class MoviesTableViewCellScreen: UIView {
         return label
     }()
     
-    private lazy var indicatorButton: UIButton = {
+    lazy var genreLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 14, weight: .medium)
+        label.textColor = .white
+        label.textAlignment = .right
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        label.lineBreakStrategy = .standard
+        return label
+    }()
+    
+    lazy var indicatorButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "check"), for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
         button.imageView?.tintColor = .white
-        //        button.addTarget(<#T##Any?#>, action: <#T##Selector#>, for: <#T##UIControl.Event#>)
         return button
     }()
 
@@ -61,23 +72,27 @@ extension MoviesTableViewCellScreen: ConfigViewProtocol {
         addSubview(self.imageMovie)
         addSubview(self.titleLabel)
         addSubview(self.descriptionLabel)
+        addSubview(self.genreLabel)
         addSubview(self.indicatorButton)
     }
     
     func configureConstraints() {
         NSLayoutConstraint.activate([
             
-            imageMovie.topAnchor.constraint(equalTo: self.topAnchor),
+            imageMovie.topAnchor.constraint(equalTo: topAnchor),
             imageMovie.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             imageMovie.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             imageMovie.widthAnchor.constraint(equalToConstant: 50),
             
-            titleLabel.centerYAnchor.constraint(equalTo: self.imageMovie.centerYAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: self.imageMovie.trailingAnchor, constant: 50),
+            titleLabel.topAnchor.constraint(greaterThanOrEqualTo: self.topAnchor, constant: 20),
+            titleLabel.leadingAnchor.constraint(equalTo: self.imageMovie.trailingAnchor,constant: 5),
             
             descriptionLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 5),
-            descriptionLabel.centerXAnchor.constraint(equalTo: self.titleLabel.centerXAnchor),
+            descriptionLabel.trailingAnchor.constraint(greaterThanOrEqualTo: self.genreLabel.leadingAnchor, constant: -8),
             descriptionLabel.leadingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor),
+            
+            genreLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor),
+            genreLabel.centerYAnchor.constraint(equalTo: self.descriptionLabel.centerYAnchor),
             
             indicatorButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 4),
             indicatorButton.trailingAnchor.constraint(equalTo: self.trailingAnchor),

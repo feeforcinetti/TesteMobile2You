@@ -8,8 +8,19 @@
 import Foundation
 import UIKit
 
+// MARK: - Result
+
 struct ListMovies: Codable {
-    let image: String?
+    var results: [Result] = []
+}
+
+struct Result: Codable {
+    let backdropPath: String?
+    let genreIds: [Int]?
+    let id: Int?
     let title: String?
-    let genre: String?
+    let popularity: Double?
+    let posterPath, releaseDate: String?
+    let voteCount: Int?
+
 }

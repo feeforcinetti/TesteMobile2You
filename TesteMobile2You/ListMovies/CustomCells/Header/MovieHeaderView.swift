@@ -24,15 +24,33 @@ class MovieHeaderView: UITableViewHeaderFooterView {
         return label
     }()
     
+    lazy var iconLike: UIImageView = {
+       let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.image = UIImage(named: "like")
+        image.contentMode = .scaleAspectFit
+        image.tintColor = .white
+        return image
+    }()
+    
      lazy var likes: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .black
         label.text = "1.2 Likes"
-        label.font = UIFont.systemFont(ofSize: 15)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .white
 
         return label
+    }()
+    
+    lazy var iconWatched: UIImageView = {
+       let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.image = UIImage(named: "view")
+        image.contentMode = .scaleAspectFit
+        image.tintColor = .white
+        return image
     }()
     
      lazy var watched: UILabel = {
@@ -40,7 +58,7 @@ class MovieHeaderView: UITableViewHeaderFooterView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .black
         label.text = "3 of 10 watched"
-        label.font = UIFont.systemFont(ofSize: 15)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .white
 
         return label
@@ -66,6 +84,12 @@ class MovieHeaderView: UITableViewHeaderFooterView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    public func setupInfoHeader(data: HeaderMovie?) {
+        self.likes.text = String(data?.voteCount ?? 0) + " likes"
+        self.watched.text = String(data?.popularity ?? 0) + " views"
+        self.titleMovies.text = data?.originalTitle
+    }
+    
     @objc private func tappedButton() {
         button.isSelected = !button.isSelected
         self.button.setImage(UIImage(named: button.isSelected ? "like" : "heart"), for: .normal)
@@ -75,7 +99,9 @@ class MovieHeaderView: UITableViewHeaderFooterView {
 extension MovieHeaderView: ConfigViewProtocol {
     func configureSubviews() {
         addSubview(self.titleMovies)
+        addSubview(self.iconLike)
         addSubview(self.likes)
+        addSubview(self.iconWatched)
         addSubview(self.watched)
         addSubview(self.button)
     }
@@ -86,11 +112,22 @@ extension MovieHeaderView: ConfigViewProtocol {
             titleMovies.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 6),
             titleMovies.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -20),
             
+            iconLike.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            iconLike.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            iconLike.trailingAnchor.constraint(equalTo: self.likes.leadingAnchor, constant: -5),
+            iconLike.heightAnchor.constraint(equalToConstant: 14),
+            iconLike.widthAnchor.constraint(equalToConstant: 14),
+            
             likes.topAnchor.constraint(equalTo: self.titleMovies.bottomAnchor, constant: 4),
-            likes.leadingAnchor.constraint(equalTo: self.titleMovies.leadingAnchor),
-           
+            likes.centerYAnchor.constraint(equalTo: self.iconLike.centerYAnchor),
+            
+            iconWatched.centerYAnchor.constraint(equalTo: self.likes.centerYAnchor),
+            iconWatched.leadingAnchor.constraint(equalTo: self.likes.trailingAnchor, constant: 30),
+            iconWatched.trailingAnchor.constraint(equalTo: self.watched.leadingAnchor, constant: -5),
+            iconWatched.heightAnchor.constraint(equalToConstant: 14),
+            iconWatched.widthAnchor.constraint(equalToConstant: 14),
+            
             watched.centerYAnchor.constraint(equalTo: self.likes.centerYAnchor),
-            watched.leadingAnchor.constraint(equalTo: self.likes.trailingAnchor, constant: 15),
             
             button.topAnchor.constraint(equalTo: self.titleMovies.topAnchor),
             button.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 30),

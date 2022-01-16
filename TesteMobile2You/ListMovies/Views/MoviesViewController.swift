@@ -11,28 +11,52 @@ class MoviesViewController: UIViewController {
     
     var movies: MoviesView?
     
-    var moviesApi: MoviesApi = MoviesApi()
+    var viewModel: MoviesViewModel = MoviesViewModel()
     
-    var listMovies: [ListMovies] = []
-
+    var movieHeader: HeaderMovie?
+    
+    var listMovies: [Result] = []
+    
     override func loadView() {
         self.movies = MoviesView()
         self.view = movies
+        self.movies?.configTableViewProtocols(delegate: self, datasource: self)
+        
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        movies?.configTableViewProtocols(delegate: self, datasource: self)
-        
-        moviesApi.fetchMovies { movie in
+        self.movies?.configDelegate(delegate: self)
+        viewModel.fetchMovie { movie in
+            self.movieHeader = movie
             DispatchQueue.main.async {
-                self.movies?.ImageMovie.image = UIImage(named: String(movie?.posterPath ?? ""))
+                self.movies?.tableView.reloadData()
             }
-            
         }
-      
+        
+        viewModel.fetchListMovies { list in
+            self.listMovies = list.results
+            DispatchQueue.main.async {
+                self.movies?.tableView.reloadData()
+                print(self.listMovies)
+            }
+        }
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.movies?.getImage(data: movieHeader)
+    }
+    
+    @objc private func tappedButton() {
+        
+    }
+}
 
+extension MoviesViewController : MoviesViewProtocol {
+    func actionButton() {
+    }
+    
 }
 
 extension MoviesViewController: UITableViewDelegate, UITableViewDataSource {
@@ -44,12 +68,23 @@ extension MoviesViewController: UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: MoviesTableViewCell.identifier, for: indexPath) as? MoviesTableViewCell
         
-        cell?.backgroundColor = .black
-        cell?.setupCell(data: listMovies[indexPath.row])
-
+        if let cellInfo = cell {
+            cellInfo.backgroundColor = .black
+            cellInfo.setupCell(data: listMovies[indexPath.row])
+        }
         return cell ?? UITableViewCell()
     }
+    
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
 
+        if let indexPathForSelectedRow = tableView.indexPathForSelectedRow,
+            indexPathForSelectedRow == indexPath {
+            tableView.deselectRow(at: indexPath, animated: false)
+            return nil
+        }
+        return indexPath
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return CGFloat(100)
     }
@@ -57,22 +92,18 @@ extension MoviesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "MovieHeader") as? MovieHeaderView
         
-        self.moviesApi.fetchMovies { movie in
-            guard let movie = movie else {return}
-            DispatchQueue.main.async {
-                header?.titleMovies.text = movie.belongsToCollection.name
-                header?.likes.text = String(movie.voteCount ?? 0.0) + " likes"
-                header?.watched.text = String(movie.popularity ?? 0.0) + " views"
-                tableView.reloadData()
-            }
+        if let headerInfo = header {
+            headerInfo.setupInfoHeader(data: movieHeader)
         }
-        
+ 
         return header
     }
+    
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 100
     }
     
-    
 }
+
+
